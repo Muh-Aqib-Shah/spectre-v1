@@ -391,7 +391,7 @@ uint64_t rdtsc() {
 int check_if_in_cache(void *ptr) {
     uint64_t start = rdtsc();
     volatile int reg = *(int*)ptr;
-    uint64_t end = rdtsc();
+    uint64_t end = rdtsc(); 
     return (end - start < CACHE_MISS);  // < 185 cycles = cached
 }</div>
 
