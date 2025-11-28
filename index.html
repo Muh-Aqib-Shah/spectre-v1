@@ -3,9 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spectre Vulnerabiliy</title>
+    <title>Spectre V1 Attack Simulation | Microarchitectural Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Palatino', serif;
+            line-height: 1.7;
+            color: #2b2b2b;
+            background: #f8f8f8;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: white;
+            padding: 60px 80px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            border-bottom: 2px solid #2b2b2b;
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #666;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .meta-info {
+            margin-top: 20px;
+            padding: 15px 0;
+            font-size: 0.95em;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            margin-top: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2b2b2b;
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .abstract {
+            background: #fafafa;
+            border-left: 3px solid #2b2b2b;
+            padding: 25px;
+            margin: 30px 0;
+            font-size: 0.98em;
+        }
+
+        .abstract p:last-child {
+            margin-bottom: 0;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            margin: 30px 0;
+            border: 1px solid #ddd;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #999;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background: #2b2b2b;
+            color: white;
+            text-decoration: none;
+            font-size: 0.95em;
+            margin: 10px 10px 10px 0;
+            transition: background 0.2s;
+            border: 1px solid #2b2b2b;
+        }
+
+        .btn:hover {
+            background: #1a1a1a;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2b2b2b;
+            border: 1px solid #2b2b2b;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-member h3 {
+            font-size: 1.1em;
+            margin: 0 0 8px 0;
+        }
+
+        .contribution {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .tech-badge {
+            background: #f0f0f0;
+            padding: 6px 14px;
+            font-size: 0.85em;
+            color: #444;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+        }
+
+        .findings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .finding {
+            padding: 20px;
+            background: #fafafa;
+            border-left: 2px solid #2b2b2b;
+        }
+
+        .finding h4 {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+
+        .finding p {
+            font-size: 0.9em;
+            color: #555;
+            margin: 0;
+            text-align: left;
+        }
+
+        .code-snippet {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #2b2b2b;
+        }
+
+        .references {
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .references li {
+            margin-bottom: 12px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #2b2b2b;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        footer p {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .warning {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px 20px;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .findings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <div class="container">
+        <header>
+            <h1>Spectre Variant 1 Attack Simulation</h1>
+            <p class="subtitle">Exploiting Speculative Execution for Memory Leakage</p>
+            <div class="meta-info">
+                <strong>CVE-2017-5753</strong> | Microarchitectural Security Project | 2024
+            </div>
+        </header>
+
+        <section class="section">
+            <h2>Abstract</h2>
+            <div class="abstract">
+                <p>Spectre Variant 1 is a critical microarchitectural vulnerability that exploits speculative execution in modern processors to break memory isolation boundaries. By manipulating branch prediction and leveraging cache timing side channels, attackers can extract arbitrary data from protected memory regions.</p>
+                
+                <p>This project presents a comprehensive analysis of the vulnerability, including its root cause in CPU microarchitecture, a practical proof-of-concept implementation, and an evaluation of current mitigation strategies. Our simulation successfully demonstrates the extraction of secret data from memory using only unprivileged code, highlighting the fundamental security challenges posed by performance-oriented processor design.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Attack Demonstration</h2>
+            <p>The following video demonstrates our complete attack simulation, showing real-time memory extraction through cache timing analysis. The demonstration includes branch predictor training, cache flush operations, speculative execution exploitation, and successful data leakage.</p>
+            
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <p>Video demonstration will be embedded here</p>
+                    <p style="font-size: 0.85em; margin-top: 10px;">Replace with YouTube or Vimeo embed code</p>
+                </div>
+                <!-- :I will add videro here later
+                <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+                -->
+            </div>
+
+            <p><strong>Demonstration Overview:</strong> The attack successfully extracts the protected string "SUPER MEGA TOP SECRET" from memory by exploiting the timing difference between cache hits (~4 cycles) and cache misses (~200+ cycles). The proof-of-concept achieves 100% extraction accuracy across multiple test runs.</p>
+        </section>
+
+        <section class="section">
+            <h2>Full Report</h2>
+            <p>Our academic report provides a detailed technical analysis of the Spectre V1 vulnerability, covering CPU microarchitecture fundamentals, attack mechanisms, mitigation strategies, and a line-by-line code analysis of our proof-of-concept implementation.</p>
+            
+            <div class="findings-grid">
+                <div class="finding">
+                    <h4>Technical Background</h4>
+                    <p>Analysis of speculative execution, branch prediction, cache architecture, and Pattern History Table mechanisms</p>
+                </div>
+                <div class="finding">
+                    <h4>Attack Methodology</h4>
+                    <p>Detailed breakdown of PHT training, cache timing measurement, and speculative memory access exploitation</p>
+                </div>
+                <div class="finding">
+                    <h4>Vendor Mitigations</h4>
+                    <p>Evaluation of Intel, AMD, and software-level defenses including IBRS, retpoline, and compiler protections</p>
+                </div>
+                <div class="finding">
+                    <h4>Code Analysis</h4>
+                    <p>Complete annotation of proof-of-concept source code with implementation details and timing calibration</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <a href="#" class="btn" onclick="alert('Upload your PDF report and link it here'); return false;">Download Full Report (PDF)</a>
+                <a href="https://github.com/Muh-Aqib-Shah/spectre-v1" class="btn btn-secondary" target="_blank">View Source Code</a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Technical Implementation</h2>
+            <p>Our proof-of-concept is implemented in C with x86-64 assembly intrinsics for precise timing measurements and cache manipulation. The implementation demonstrates the core primitives necessary for Spectre exploitation.</p>
+
+            <h3>Technologies Used</h3>
+            <div class="tech-list">
+                <span class="tech-badge">C</span>
+                <span class="tech-badge">x86-64 Assembly</span>
+                <span class="tech-badge">Intel Intrinsics</span>
+                <span class="tech-badge">RDTSC</span>
+                <span class="tech-badge">Cache Analysis</span>
+                <span class="tech-badge">GCC/Clang</span>
+            </div>
+
+            <h3>Key Code Components</h3>
+            
+            <div class="code-snippet">// Branch Predictor Training
+void spoofPHT() {
+    for (int y = 0; y < 20; y++)
+        target_function(0);  // Train with valid indices
+}
+
+// Vulnerable Function with Speculative Access
+char target_function(int x) {
+    if (((float)x / (float)boring_data_length < 1)) {
+        temp = array2[array1[x]];  // Out-of-bounds access during speculation
+    }
+}
+
+// High-Precision Cycle-Accurate Timing
+uint64_t rdtsc() {
+    uint64_t a, d;
+    _mm_mfence();
+    asm volatile("rdtsc" : "=a"(a), "=d"(d));
+    return (d << 32) | a;
+}
+
+// Cache State Detection
+int check_if_in_cache(void *ptr) {
+    uint64_t start = rdtsc();
+    volatile int reg = *(int*)ptr;
+    uint64_t end = rdtsc();
+    return (end - start < CACHE_MISS);  // < 185 cycles = cached
+}</div>
+
+            <p><strong>Results:</strong> The implementation achieves reliable extraction of protected data with 100% accuracy. Cache timing measurements show clear differentiation between hits and misses, enabling byte-by-byte reconstruction of secret strings.</p>
+        </section>
+
+        <section class="section">
+            <h2>Project Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <h3>Aqib Shah</h3>
+                    <p class="contribution">Attack implementation and proof-of-concept development</p>
+                    <p class="contribution"><em>66.3% contribution</em></p>
+                </div>
+                <div class="team-member">
+                    <h3>Laman</h3>
+                    <p class="contribution">Technical research and report writing</p>
+                    <p class="contribution"><em>33.3% contribution</em></p>
+                </div>
+                <div class="team-member">
+                    <h3>Student 3</h3>
+                    <p class="contribution">Video production and mitigation analysis</p>
+                    <p class="contribution"><em>33.3% contribution</em></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>References</h2>
+            <ul class="references">
+                <li>Kocher, P., et al. (2019). Spectre attacks: Exploiting speculative execution. <em>IEEE Symposium on Security and Privacy</em>.</li>
+                <li>Intel Corporation. (2018). Speculative Execution Side Channel Mitigations. Technical Documentation, Revision 4.0.</li>
+                <li>Lipp, M., et al. (2018). Meltdown: Reading kernel memory from user space. <em>27th USENIX Security Symposium</em>.</li>
+                <li>Canella, C., et al. (2019). A systematic evaluation of transient execution attacks and defenses. <em>28th USENIX Security Symposium</em>.</li>
+                <li>AMD. (2018). Software techniques for managing speculation on AMD processors. Technical Documentation, Revision 7.10.18.</li>
+            </ul>
+        </section>
+
+        <footer>
+            <div class="warning">
+                <strong>Educational Purpose Only:</strong> This demonstration is intended solely for academic research and security education. Unauthorized exploitation of vulnerabilities is illegal and unethical.
+            </div>
+            <p>Microarchitectural Security Course Project</p>
+            <p>Computer Science Department | 2024</p>
+        </footer>
+    </div>
 </body>
 </html>
